@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huck Nieruchomości — Flipy i Pośrednictwo na Dolnym Śląsku</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #222222;
+            --accent: #c8a24e;
+            --accent-hover: #dbb65e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --border: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(200, 162, 78, 0.08) 0%, transparent 60%),
+                var(--bg-primary);
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.85rem 2.2rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Sections */
+        section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-title span {
+            color: var(--accent);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        /* About */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Services */
+        .services-section {
+            background: var(--bg-secondary);
+            border-radius: 0;
+            padding: 5rem 0;
+        }
+
+        .services-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            background: rgba(200, 162, 78, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .cards { grid-template-columns: 1fr; }
+            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <div class="logo">HUCK <span>Nieruchomości</span></div>
+        <nav>
+            <a href="#o-nas">O nas</a>
+            <a href="#uslugi">Usługi</a>
+            <a href="#kontakt">Kontakt</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div>
+        <h1>Inwestujemy w <span>nieruchomości</span><br>na Dolnym Śląsku</h1>
+        <p>Flipy, pośrednictwo i inwestycje — kompleksowa obsługa rynku nieruchomości na Dolnym Śląsku i Opolszczyźnie.</p>
+        <a href="#kontakt" class="btn">Skontaktuj się z nami</a>
+    </div>
+</section>
+
+<section id="o-nas">
+    <div class="about-grid">
+        <div class="about-text">
+            <h2 class="section-title">O <span>nas</span></h2>
+            <p class="section-subtitle">Poznaj Huck Nieruchomości</p>
+            <p>Huck Nieruchomości to firma działająca na rynku nieruchomości Dolnego Śląska i Opolszczyzny. Specjalizujemy się w flipach mieszkaniowych — kupujemy, remontujemy i sprzedajemy nieruchomości z zyskiem.</p>
+            <p>Równolegle prowadzimy działalność pośrednictwa, pomagając klientom w sprzedaży i zakupie mieszkań, domów oraz lokali użytkowych. Łączymy doświadczenie inwestorskie z profesjonalną obsługą klienta.</p>
+        </div>
+        <div class="about-stats">
+            <div class="stat">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Zrealizowanych projektów</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Regiony działania</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Zaangażowania</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">24h</div>
+                <div class="stat-label">Czas odpowiedzi</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="services-section" id="uslugi">
+    <div class="services-inner">
+        <h2 class="section-title">Nasze <span>usługi</span></h2>
+        <p class="section-subtitle">Kompleksowa obsługa rynku nieruchomości</p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">&#x1F3E0;</div>
+                <h3>Flipy mieszkaniowe</h3>
+                <p>Kupujemy nieruchomości poniżej wartości rynkowej, przeprowadzamy profesjonalne remonty i sprzedajemy z zyskiem. Szukasz okazji inwestycyjnej? Porozmawiajmy.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#x1F91D;</div>
+                <h3>Pośrednictwo</h3>
+                <p>Pomagamy w kupnie i sprzedaży nieruchomości na Dolnym Śląsku i Opolszczyźnie. Profesjonalna wycena, marketing i obsługa transakcji od A do Z.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#x1F4C8;</div>
+                <h3>Inwestycje</h3>
+                <p>Doradztwo inwestycyjne w nieruchomości. Pomagamy wybrać najlepsze lokalizacje i strategie, by Twój kapitał pracował efektywnie na rynku nieruchomości.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer id="kontakt">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="logo">HUCK <span>Nieruchomości</span></div>
+            <p>Flipy, pośrednictwo i inwestycje w nieruchomości na Dolnym Śląsku i Opolszczyźnie.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Kontakt</h4>
+            <p>kontakt@huck-nieruchomosci.pl</p>
+            <p>+48 123 456 789</p>
+            <p>Wrocław, Dolny Śląsk</p>
+        </div>
+        <div class="footer-col">
+            <h4>Nawigacja</h4>
+            <a href="#o-nas">O nas</a>
+            <a href="#uslugi">Usługi</a>
+            <a href="#kontakt">Kontakt</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 Huck Nieruchomości. Wszelkie prawa zastrzeżone.
+    </div>
+</footer>
+
+</body>
+</html>
