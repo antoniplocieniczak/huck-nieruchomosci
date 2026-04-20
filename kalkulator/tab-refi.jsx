@@ -124,31 +124,31 @@ function RefinanceTab() {
       </div>
 
       {/* Results banner */}
-      <div style={{ marginTop: 24, position: 'relative', overflow: 'hidden', background: 'var(--sage)', borderRadius: 24, padding: '48px 48px' }}>
-        <div aria-hidden style={{ position: 'absolute', right: -40, bottom: -80, fontSize: 280, WebkitTextStroke: '1px rgba(48, 60, 48, 0.2)', color: 'transparent', fontFamily: 'Clash Display', fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 0.85, pointerEvents: 'none' }}>
+      <div className="h-refi-banner" style={{ marginTop: 24, position: 'relative', overflow: 'hidden', background: 'var(--sage)', borderRadius: 24, padding: '48px 48px' }}>
+        <div aria-hidden className="h-refi-outline" style={{ position: 'absolute', right: -40, bottom: -80, fontSize: 280, WebkitTextStroke: '1px rgba(48, 60, 48, 0.2)', color: 'transparent', fontFamily: 'Clash Display', fontWeight: 700, letterSpacing: '-0.04em', lineHeight: 0.85, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
           OSZCZĘDNOŚĆ
         </div>
         <div style={{ position: 'relative' }}>
           <SectionHeader number="03" title="Twoja oszczędność." />
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, marginTop: 32 }}>
+          <div className="h-refi-savings-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, marginTop: 32 }}>
             <div>
               <div className="h-fieldlabel" style={{ marginBottom: 8 }}>Różnica w racie</div>
-              <div className="font-display tnum" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
+              <div className="font-display tnum h-refi-savings-number" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
                 {diff <= 0 ? formatPLN(diff) : `+${formatPLN(diff)}`}
               </div>
               <div style={{ fontSize: 13, color: 'var(--khaki)', marginTop: 6 }}>miesięcznie</div>
             </div>
             <div>
               <div className="h-fieldlabel" style={{ marginBottom: 8 }}>Oszczędność łączna</div>
-              <div className="font-display tnum" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
+              <div className="font-display tnum h-refi-savings-number" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
                 {formatPLN(lifetimeSavings)}
               </div>
               <div style={{ fontSize: 13, color: 'var(--khaki)', marginTop: 6 }}>po uwzględnieniu kosztów ({formatPLN(costs)})</div>
             </div>
             <div>
               <div className="h-fieldlabel" style={{ marginBottom: 8 }}>Okres zwrotu kosztów</div>
-              <div className="font-display tnum" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
+              <div className="font-display tnum h-refi-savings-number" style={{ fontWeight: 700, fontSize: 48, color: 'var(--forest)', letterSpacing: '-0.03em' }}>
                 {isFinite(paybackMonths) ? `${paybackMonths} mies` : '—'}
               </div>
               <div style={{ fontSize: 13, color: 'var(--khaki)', marginTop: 6 }}>od tego momentu oszczędzasz</div>
@@ -156,7 +156,7 @@ function RefinanceTab() {
           </div>
 
           <div style={{ marginTop: 40 }}>
-            <button className="h-btn" onClick={(e) => e.preventDefault()}>
+            <button className="h-btn h-refi-cta" onClick={(e) => e.preventDefault()}>
               Umów konsultację z doradcą kredytowym Huck
               <span className="arrow-circle"><ArrowUpRight size={12} /></span>
             </button>

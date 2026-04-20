@@ -395,6 +395,40 @@ h1, h2, h3 { margin: 0; font-family: 'Clash Display', system-ui, sans-serif; fon
 
 @media (max-width: 900px) {
   .lead-magnet-grid { grid-template-columns: 1fr !important; min-height: auto !important; }
+  .lead-magnet-copy { padding: 40px 28px !important; }
+  .lead-magnet-visual { min-height: 320px !important; }
+}
+
+/* Schedule table — force horizontal scroll on narrow viewports */
+.h-schedule { min-width: 720px; }
+
+@media (max-width: 900px) {
+  .h-schedule { min-width: 640px; font-size: 12px; }
+  .h-schedule thead th { padding: 10px 10px; font-size: 10px; letter-spacing: 0.12em; }
+  .h-schedule tbody td { padding: 10px 10px; }
+  .h-schedule .inline-edit { width: 60px; padding: 3px 6px; }
+}
+
+/* Scroll hint for narrow tables */
+.h-scroll-hint { position: relative; }
+.h-scroll-hint::after {
+  content: '';
+  position: absolute;
+  top: 1px; right: 1px; bottom: 1px;
+  width: 32px;
+  background: linear-gradient(to left, var(--cream), transparent);
+  pointer-events: none;
+  border-radius: 0 13px 13px 0;
+}
+@media (min-width: 1100px) { .h-scroll-hint::after { display: none; } }
+
+/* Refinansowanie "Twoja oszczędność" banner */
+@media (max-width: 900px) {
+  .h-refi-banner { padding: 32px 24px !important; }
+  .h-refi-savings-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+  .h-refi-savings-number { font-size: 38px !important; }
+  .h-refi-outline { font-size: 180px !important; right: -20px !important; bottom: -50px !important; opacity: 0.22 !important; }
+  .h-refi-cta { font-size: 13px !important; padding: 12px 20px !important; }
 }
 
 /* Focus ring for accessibility without ugly outline */

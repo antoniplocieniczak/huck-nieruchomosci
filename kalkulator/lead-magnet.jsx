@@ -8,7 +8,7 @@ function LeadMagnet() {
     <section style={{ marginTop: 80, padding: '0 48px' }} className="h-main-pad">
       <div style={{ maxWidth: 1440, margin: '0 auto' }}>
         <div
-          className="noise-dark"
+          className="noise-dark lead-magnet-grid"
           style={{
             position: 'relative',
             overflow: 'hidden',
@@ -19,7 +19,6 @@ function LeadMagnet() {
             gap: 0,
             minHeight: 460,
           }}
-          className="lead-magnet-grid"
         >
           {/* Outline word */}
           <div
@@ -39,7 +38,7 @@ function LeadMagnet() {
           </div>
 
           {/* Left: copy */}
-          <div style={{ position: 'relative', padding: '56px 48px', color: 'var(--cream)' }}>
+          <div className="lead-magnet-copy" style={{ position: 'relative', padding: '56px 48px', color: 'var(--cream)' }}>
             <div className="h-numlabel" style={{ color: 'rgba(244, 239, 233, 0.55)', marginBottom: 18 }}>
               BEZPŁATNY PORADNIK
             </div>
@@ -116,7 +115,7 @@ function LeadMagnet() {
           </div>
 
           {/* Right: visual — iPad on counter */}
-          <div style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, #564F3F 0%, #4E4138 100%)' }}>
+          <div className="lead-magnet-visual" style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, #564F3F 0%, #4E4138 100%)' }}>
             {/* SVG scene: kitchen counter + iPad showing ebook */}
             <svg
               viewBox="0 0 600 520"

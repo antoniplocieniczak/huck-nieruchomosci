@@ -216,7 +216,7 @@ function ScheduleTable({ schedule, overrides, setOverride, amount, totalMonths }
         </div>
       </div>
 
-      <div className="h-scroll" style={{ maxHeight: 420, overflow: 'auto', marginTop: 24, border: '1px solid var(--beige-light)', borderRadius: 14 }}>
+      <div className="h-scroll h-scroll-hint" style={{ maxHeight: 420, overflow: 'auto', marginTop: 24, border: '1px solid var(--beige-light)', borderRadius: 14 }}>
         <table className="h-schedule">
           <thead>
             <tr>
