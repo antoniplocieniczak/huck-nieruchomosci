@@ -1,402 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Huck Nieruchomości — Flipy i Pośrednictwo na Dolnym Śląsku</title>
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zapolskiej Namysłów — osiedle bliźniaków premium</title>
+  <meta name="description" content="Zapolskiej Namysłów. 16 bliźniaków z ogrodami w sercu Namysłowa. Oddanie III kw. 2027. Ceny od 649 000 zł." />
 
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-card: #222222;
-            --accent: #c8a24e;
-            --accent-hover: #dbb65e;
-            --text-primary: #f0f0f0;
-            --text-secondary: #a0a0a0;
-            --border: #333333;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700,400&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#F4EFE9',
+            ink: '#1A1A1A',
+            forest: '#303C30',
+            sage: '#B8C5AB',
+            brown: '#4E4138',
+            warm: '#564F3F',
+            stone: '#C5BCAB',
+            sand: '#DAD1BF',
+            hairline: '#DAD1BF',
+            muted: '#564F3F',
+            amber: '#C5BCAB',
+            sold: '#A8A29E',
+          },
+          fontFamily: {
+            display: ['"Clash Display"', 'Georgia', 'sans-serif'],
+            sans: ['Ubuntu', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          letterSpacing: {
+            'extreme': '0.2em',
+          }
         }
+      }
+    }
+  </script>
 
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 15, 15, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-        }
+  <style>
+    :root {
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #F4EFE9;
+      color: #1A1A1A;
+      font-family: 'Ubuntu', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .font-display { font-family: 'Clash Display', Georgia, sans-serif; font-weight: 600; letter-spacing: -0.015em; }
+    .font-display-bold { font-family: 'Clash Display', Georgia, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+    /* Sage underline / accent word (Huck style) */
+    .accent-sage { color: #B8C5AB; }
+    /* Outline text effect */
+    .text-outline {
+      -webkit-text-stroke: 1.5px #303C30;
+      color: transparent;
+    }
+    .mono-label {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .mono-data {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .hairline { border-color: #E5DFD6; }
 
-        .header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s var(--ease), transform 1s var(--ease);
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
+    /* Custom scrollbar for panels */
+    .panel-scroll::-webkit-scrollbar { width: 4px; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: #E5DFD6; border-radius: 2px; }
 
-        .logo span {
-            color: var(--accent);
-        }
+    /* Hero parallax target */
+    .hero-media { transform-origin: center; will-change: transform; }
 
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            margin-left: 2rem;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+    /* Huck photo gradient overlay */
+    .huck-photo-grad::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(48,60,48,0) 0%, rgba(48,60,48,0.25) 55%, rgba(78,65,56,0.85) 100%);
+      pointer-events: none;
+    }
 
-        nav a:hover {
-            color: var(--accent);
-        }
+    /* Pulse for current timeline node */
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(48,60,48,0.35); }
+      70% { box-shadow: 0 0 0 14px rgba(48,60,48,0); }
+      100% { box-shadow: 0 0 0 0 rgba(48,60,48,0); }
+    }
+    .pulse-ring { animation: pulse-ring 2.2s var(--ease) infinite; }
 
-        /* Hero */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 6rem 2rem 4rem;
-            background:
-                radial-gradient(ellipse at 50% 0%, rgba(200, 162, 78, 0.08) 0%, transparent 60%),
-                var(--bg-primary);
-        }
+    /* Cursor hide on desktop hero when custom cursor active */
+    .cursor-none, .cursor-none * { cursor: none !important; }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 700;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-        }
+    /* Accordion */
+    details[open] summary .chev { transform: rotate(45deg); }
+    details summary::-webkit-details-marker { display: none; }
 
-        .hero h1 span {
-            color: var(--accent);
-        }
+    /* Hide scrollbars on pill filter row */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
 
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
+    /* Plot segment hover */
+    .plot-seg { transition: all 0.35s var(--ease); }
+    .plot-seg:hover { filter: brightness(1.1); }
 
-        .btn {
-            display: inline-block;
-            padding: 0.85rem 2.2rem;
-            background: var(--accent);
-            color: var(--bg-primary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: 6px;
-            transition: background 0.2s, transform 0.2s;
-        }
+    /* Input focus */
+    .field {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.20);
+      color: #F5F2ED;
+      padding: 14px 16px;
+      width: 100%;
+      font-family: inherit;
+      font-size: 15px;
+      transition: border-color 150ms ease, background-color 150ms ease, box-shadow 200ms ease;
+    }
+    .field::placeholder { color: rgba(245,242,237,0.60); }
+    .field:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.40);
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
+    }
 
-        .btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
-        }
+    /* Frosted glass card - używana w sekcji kontakt pod zdjęciem z overlay forest.
+       Fallback dla przeglądarek bez backdrop-filter: mocniejsze ciemne tło. */
+    .glass-card {
+      background-color: rgba(255,255,255,0.06);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+    }
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .glass-card {
+        background-color: rgba(0,0,0,0.55);
+      }
+    }
 
-        /* Sections */
-        section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5rem 2rem;
-        }
+    /* Slider */
+    input[type="range"].calc-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 2px; background: #E5DFD6; outline: none;
+    }
+    input[type="range"].calc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #2D3B2E; cursor: pointer;
+      border: 3px solid #F5F2ED;
+      box-shadow: 0 0 0 1px #2D3B2E;
+    }
+    input[type="range"].calc-slider::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #2D3B2E; cursor: pointer;
+      border: 3px solid #F5F2ED;
+    }
 
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
+    /* Marquee for trust bar */
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .marquee { animation: marquee 40s linear infinite; }
 
-        .section-title span {
-            color: var(--accent);
-        }
+    /* Scroll arrow bounce */
+    @keyframes nudge {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(8px); opacity: 1; }
+    }
+    .nudge { animation: nudge 2s var(--ease) infinite; }
+  </style>
 
-        .section-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Residence",
+    "name": "Zapolskiej Namysłów",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "ul. Zapolskiej",
+      "addressLocality": "Namysłów",
+      "addressRegion": "opolskie",
+      "addressCountry": "PL"
+    }
+  }
+  </script>
 
-        /* About */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .about-text p {
-            color: var(--text-secondary);
-            margin-bottom: 1.2rem;
-            font-size: 1.05rem;
-        }
-
-        .about-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .stat {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
-        }
-
-        /* Services */
-        .services-section {
-            background: var(--bg-secondary);
-            border-radius: 0;
-            padding: 5rem 0;
-        }
-
-        .services-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2.5rem 2rem;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-
-        .card-icon {
-            width: 52px;
-            height: 52px;
-            background: rgba(200, 162, 78, 0.12);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-        }
-
-        .card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border);
-            background: var(--bg-secondary);
-        }
-
-        .footer-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 3rem;
-        }
-
-        .footer-brand .logo {
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .footer-brand p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        .footer-col h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .footer-col p,
-        .footer-col a {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.5rem;
-            transition: color 0.2s;
-        }
-
-        .footer-col a:hover {
-            color: var(--accent);
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .about-grid { grid-template-columns: 1fr; }
-            .cards { grid-template-columns: 1fr; }
-            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
-            nav { display: none; }
-        }
-    </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
+  <div id="root"></div>
 
-<header>
-    <div class="header-inner">
-        <div class="logo">HUCK <span>Nieruchomości</span></div>
-        <nav>
-            <a href="#o-nas">O nas</a>
-            <a href="#uslugi">Usługi</a>
-            <a href="#kontakt">Kontakt</a>
-        </nav>
-    </div>
-</header>
-
-<section class="hero">
-    <div>
-        <h1>Inwestujemy w <span>nieruchomości</span><br>na Dolnym Śląsku</h1>
-        <p>Flipy, pośrednictwo i inwestycje — kompleksowa obsługa rynku nieruchomości na Dolnym Śląsku i Opolszczyźnie.</p>
-        <a href="#kontakt" class="btn">Skontaktuj się z nami</a>
-    </div>
-</section>
-
-<section id="o-nas">
-    <div class="about-grid">
-        <div class="about-text">
-            <h2 class="section-title">O <span>nas</span></h2>
-            <p class="section-subtitle">Poznaj Huck Nieruchomości</p>
-            <p>Huck Nieruchomości to firma działająca na rynku nieruchomości Dolnego Śląska i Opolszczyzny. Specjalizujemy się w flipach mieszkaniowych — kupujemy, remontujemy i sprzedajemy nieruchomości z zyskiem.</p>
-            <p>Równolegle prowadzimy działalność pośrednictwa, pomagając klientom w sprzedaży i zakupie mieszkań, domów oraz lokali użytkowych. Łączymy doświadczenie inwestorskie z profesjonalną obsługą klienta.</p>
-        </div>
-        <div class="about-stats">
-            <div class="stat">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Zrealizowanych projektów</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">2</div>
-                <div class="stat-label">Regiony działania</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Zaangażowania</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">24h</div>
-                <div class="stat-label">Czas odpowiedzi</div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="services-section" id="uslugi">
-    <div class="services-inner">
-        <h2 class="section-title">Nasze <span>usługi</span></h2>
-        <p class="section-subtitle">Kompleksowa obsługa rynku nieruchomości</p>
-        <div class="cards">
-            <div class="card">
-                <div class="card-icon">&#x1F3E0;</div>
-                <h3>Flipy mieszkaniowe</h3>
-                <p>Kupujemy nieruchomości poniżej wartości rynkowej, przeprowadzamy profesjonalne remonty i sprzedajemy z zyskiem. Szukasz okazji inwestycyjnej? Porozmawiajmy.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">&#x1F91D;</div>
-                <h3>Pośrednictwo</h3>
-                <p>Pomagamy w kupnie i sprzedaży nieruchomości na Dolnym Śląsku i Opolszczyźnie. Profesjonalna wycena, marketing i obsługa transakcji od A do Z.</p>
-            </div>
-            <div class="card">
-                <div class="card-icon">&#x1F4C8;</div>
-                <h3>Inwestycje</h3>
-                <p>Doradztwo inwestycyjne w nieruchomości. Pomagamy wybrać najlepsze lokalizacje i strategie, by Twój kapitał pracował efektywnie na rynku nieruchomości.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<footer id="kontakt">
-    <div class="footer-inner">
-        <div class="footer-brand">
-            <div class="logo">HUCK <span>Nieruchomości</span></div>
-            <p>Flipy, pośrednictwo i inwestycje w nieruchomości na Dolnym Śląsku i Opolszczyźnie.</p>
-        </div>
-        <div class="footer-col">
-            <h4>Kontakt</h4>
-            <p>kontakt@huck-nieruchomosci.pl</p>
-            <p>+48 123 456 789</p>
-            <p>Wrocław, Dolny Śląsk</p>
-        </div>
-        <div class="footer-col">
-            <h4>Nawigacja</h4>
-            <a href="#o-nas">O nas</a>
-            <a href="#uslugi">Usługi</a>
-            <a href="#kontakt">Kontakt</a>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        &copy; 2026 Huck Nieruchomości. Wszelkie prawa zastrzeżone.
-    </div>
-</footer>
-
+  <script type="text/babel" src="src/config.jsx"></script>
+  <script type="text/babel" src="src/data.jsx"></script>
+  <script type="text/babel" src="src/primitives.jsx"></script>
+  <script type="text/babel" src="src/pdf.jsx"></script>
+  <script type="text/babel" src="src/plot.jsx"></script>
+  <script type="text/babel" src="src/map.jsx"></script>
+  <script type="text/babel" src="src/sections-top.jsx"></script>
+  <script type="text/babel" src="src/sections-mid.jsx"></script>
+  <script type="text/babel" src="src/sections-bottom.jsx"></script>
+  <script type="text/babel" src="src/tweaks.jsx"></script>
+  <script type="text/babel" src="src/app.jsx"></script>
 </body>
 </html>
