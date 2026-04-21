@@ -400,7 +400,7 @@ h1, h2, h3 { margin: 0; font-family: 'Clash Display', system-ui, sans-serif; fon
 }
 
 /* Schedule table — force horizontal scroll on narrow viewports */
-.h-schedule { min-width: 880px; }
+.h-schedule { min-width: 1020px; }
 
 /* Scroll hint bar above the schedule — visible on narrow screens */
 .h-scroll-hint-bar {
