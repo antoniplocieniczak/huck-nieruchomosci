@@ -77,6 +77,7 @@ function buildSchedule(opts) {
 
   const MAX = 600; // hard guard
   let m = 1;
+  let paidSoFar = 0;
   while (remaining > 0.5 && m <= MAX) {
     const override = scheduleOverrides[m] || {};
     const rateThisMonth = override.ratePct != null ? override.ratePct : currentRate;
@@ -114,6 +115,8 @@ function buildSchedule(opts) {
 
     const totalPrincipalThisMonth = principal + extra;
     const newRemaining = remaining - totalPrincipalThisMonth;
+    const totalPaidThisMonth = payment + extra;
+    paidSoFar += totalPaidThisMonth;
 
     rows.push({
       month: m,
@@ -124,7 +127,8 @@ function buildSchedule(opts) {
       principal,
       interest,
       extra,
-      totalPaid: payment + extra,
+      totalPaid: totalPaidThisMonth,
+      paidSoFar,
       ratePct: rateThisMonth,
     });
 

@@ -400,27 +400,24 @@ h1, h2, h3 { margin: 0; font-family: 'Clash Display', system-ui, sans-serif; fon
 }
 
 /* Schedule table — force horizontal scroll on narrow viewports */
-.h-schedule { min-width: 720px; }
+.h-schedule { min-width: 880px; }
 
-@media (max-width: 900px) {
-  .h-schedule { min-width: 640px; font-size: 12px; }
-  .h-schedule thead th { padding: 10px 10px; font-size: 10px; letter-spacing: 0.12em; }
-  .h-schedule tbody td { padding: 10px 10px; }
-  .h-schedule .inline-edit { width: 60px; padding: 3px 6px; }
+/* Scroll hint bar above the schedule — visible on narrow screens */
+.h-scroll-hint-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: rgba(184, 197, 171, 0.22);
+  border: 1px solid rgba(184, 197, 171, 0.45);
+  border-radius: 12px;
+  font-size: 12.5px;
+  color: var(--khaki);
+  line-height: 1.4;
 }
-
-/* Scroll hint for narrow tables */
-.h-scroll-hint { position: relative; }
-.h-scroll-hint::after {
-  content: '';
-  position: absolute;
-  top: 1px; right: 1px; bottom: 1px;
-  width: 32px;
-  background: linear-gradient(to left, var(--cream), transparent);
-  pointer-events: none;
-  border-radius: 0 13px 13px 0;
-}
-@media (min-width: 1100px) { .h-scroll-hint::after { display: none; } }
+.h-scroll-hint-bar svg { flex: 0 0 auto; color: var(--forest); }
+@media (min-width: 1200px) { .h-scroll-hint-bar { display: none; } }
 
 /* Refinansowanie "Twoja oszczędność" banner */
 @media (max-width: 900px) {

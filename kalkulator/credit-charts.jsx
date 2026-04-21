@@ -128,12 +128,13 @@ function downloadScheduleXLSX(schedule, { amount, totalMonths } = {}) {
     ['Suma do spłaty', Math.round(schedule.totalPaid)],
     ['Suma odsetek', Math.round(schedule.totalInterest)],
     [],
-    ['#', 'Data', 'Pozostało', 'Rata', 'Kapitał', 'Odsetki', 'Oprocent. (%)', 'Nadpłata'],
+    ['#', 'Data', 'Pozostało', 'Spłacone', 'Rata', 'Kapitał', 'Odsetki', 'Oprocent. (%)', 'Nadpłata'],
   ];
   const body = schedule.rows.map((r) => [
     r.month,
     r.date.toISOString().slice(0, 10),
     Math.round(r.remainingAfter),
+    Math.round(r.paidSoFar),
     Math.round(r.payment + r.extra),
     Math.round(r.principal),
     Math.round(r.interest),
@@ -141,7 +142,7 @@ function downloadScheduleXLSX(schedule, { amount, totalMonths } = {}) {
     Math.round(r.extra),
   ]);
   const ws = XLSX.utils.aoa_to_sheet([...header, ...body]);
-  ws['!cols'] = [{ wch: 5 }, { wch: 12 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 10 }];
+  ws['!cols'] = [{ wch: 5 }, { wch: 12 }, { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 10 }];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Harmonogram');
   XLSX.writeFile(wb, 'harmonogram-kredytu.xlsx');
@@ -155,6 +156,7 @@ function downloadSchedulePDF(schedule, { amount, totalMonths } = {}) {
       <td class="num muted">${r.month}</td>
       <td class="muted">${formatDatePL(r.date)}</td>
       <td class="num">${formatPLN(r.remainingAfter)}</td>
+      <td class="num">${formatPLN(r.paidSoFar)}</td>
       <td class="num strong">${formatPLN(r.payment + r.extra)}</td>
       <td class="num">${formatPLN(r.principal)}</td>
       <td class="num muted">${formatPLN(r.interest)}</td>
@@ -196,7 +198,7 @@ function downloadSchedulePDF(schedule, { amount, totalMonths } = {}) {
     </div>
     <table>
       <thead><tr>
-        <th>#</th><th>Data</th><th>Pozostało</th><th>Rata</th><th>Kapitał</th><th>Odsetki</th><th>Oprocent.</th><th>Nadpłata</th>
+        <th>#</th><th>Data</th><th>Pozostało</th><th>Spłacone</th><th>Rata</th><th>Kapitał</th><th>Odsetki</th><th>Oprocent.</th><th>Nadpłata</th>
       </tr></thead>
       <tbody>${rowsHtml}</tbody>
     </table>
@@ -216,13 +218,22 @@ function ScheduleTable({ schedule, overrides, setOverride, amount, totalMonths }
         </div>
       </div>
 
-      <div className="h-scroll h-scroll-hint" style={{ maxHeight: 420, overflow: 'auto', marginTop: 24, border: '1px solid var(--beige-light)', borderRadius: 14 }}>
+      <div className="h-scroll-hint-bar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12H20M4 12L8 8M4 12L8 16M20 12L16 8M20 12L16 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M12 4V20M12 4L8 8M12 4L16 8M12 20L8 16M12 20L16 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.5"/>
+        </svg>
+        <span>Przesuń tabelę w poziomie i pionie, żeby zobaczyć wszystkie kolumny dla każdej raty.</span>
+      </div>
+
+      <div className="h-scroll" style={{ maxHeight: 420, overflow: 'auto', marginTop: 16, border: '1px solid var(--beige-light)', borderRadius: 14 }}>
         <table className="h-schedule">
           <thead>
             <tr>
               <th style={{ textAlign: 'left' }}>#</th>
               <th style={{ textAlign: 'left' }}>Data</th>
               <th>Pozostało</th>
+              <th>Spłacone</th>
               <th>Rata</th>
               <th>Kapitał</th>
               <th>Odsetki</th>
@@ -236,6 +247,7 @@ function ScheduleTable({ schedule, overrides, setOverride, amount, totalMonths }
                 <td className="tnum" style={{ color: 'var(--khaki)' }}>{r.month}</td>
                 <td style={{ color: 'var(--khaki)' }}>{formatDatePL(r.date)}</td>
                 <td className="tnum">{formatPLN(r.remainingAfter)}</td>
+                <td className="tnum">{formatPLN(r.paidSoFar)}</td>
                 <td className="tnum" style={{ fontWeight: 500 }}>{formatPLN(r.payment + r.extra)}</td>
                 <td className="tnum">{formatPLN(r.principal)}</td>
                 <td className="tnum" style={{ color: 'var(--khaki)' }}>{formatPLN(r.interest)}</td>
