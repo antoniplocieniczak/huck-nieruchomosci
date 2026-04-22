@@ -1,8 +1,13 @@
+// Bazowe oprocentowanie to średnia rynkowa kredytów hipotecznych na kwiecień 2026.
+// Źródło: NBP / raport AMRON-SARFiN. Aktualizować przy znaczącej zmianie.
+const BASE_RATE_PCT = 6.30;
+const BASE_RATE_MONTH = "kwiecień 2026";
+
 function ScheduleCalcSection({ selectedSeg }) {
   const [price, setPrice] = useState(selectedSeg?.price || 729000);
   const [down, setDown] = useState(20);
-  const [years, setYears] = useState(25);
-  const [rate, setRate] = useState(7.3);
+  const [years, setYears] = useState(30);
+  const [rate, setRate] = useState(BASE_RATE_PCT);
 
   useEffect(() => {
     if (selectedSeg) setPrice(selectedSeg.price);
@@ -61,25 +66,38 @@ function ScheduleCalcSection({ selectedSeg }) {
             </Reveal>
 
             <div className="mt-12 bg-[#EFEAE0] p-6 md:p-10 space-y-8">
-              <CalcField label="Cena nieruchomości" value={fmtPLN(price)}>
+              <CalcField label="Cena nieruchomości" value={<SmoothNumber value={price} format={(v) => fmtPLN(v)}/>}>
                 <input type="range" className="calc-slider" min="500000" max="1000000" step="5000" value={price} onChange={e => setPrice(+e.target.value)}/>
               </CalcField>
-              <CalcField label="Wkład własny" value={`${down}% · ${fmtPLN(Math.round(downAmount))}`}>
+              <CalcField label="Wkład własny" value={<><span>{down}% · </span><SmoothNumber value={Math.round(downAmount)} format={(v) => fmtPLN(v)}/></>}>
                 <input type="range" className="calc-slider" min="10" max="80" step="1" value={down} onChange={e => setDown(+e.target.value)}/>
               </CalcField>
-              <CalcField label="Okres kredytowania" value={`${years} lat`}>
+              <CalcField label="Okres kredytowania" value={<><SmoothNumber value={years}/> lat</>}>
                 <input type="range" className="calc-slider" min="5" max="35" step="1" value={years} onChange={e => setYears(+e.target.value)}/>
               </CalcField>
-              <CalcField label="Oprocentowanie roczne" value={`${rate.toFixed(2)}%`}>
+              <CalcField
+                label="Oprocentowanie roczne"
+                value={`${rate.toFixed(2)}%`}
+                hint={
+                  Math.abs(rate - BASE_RATE_PCT) < 0.01 && (
+                    <span className="inline-flex items-center gap-1.5 text-forest/80">
+                      <svg viewBox="0 0 20 20" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M13 4l5 6-5 6"/><path d="M18 10H2"/>
+                      </svg>
+                      <span>średnie rynkowe · {BASE_RATE_MONTH}</span>
+                    </span>
+                  )
+                }
+              >
                 <input type="range" className="calc-slider" min="4" max="10" step="0.1" value={rate} onChange={e => setRate(+e.target.value)}/>
               </CalcField>
 
               <div className="pt-6 border-t hairline">
                 <div className="mono-label text-muted">SZACOWANA RATA MIESIĘCZNA</div>
                 <div className="font-display leading-none mt-2" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
-                  ok. {Math.round(monthly).toLocaleString("pl-PL")} zł
+                  ok. <SmoothNumber value={Math.round(monthly)}/> zł
                 </div>
-                <div className="mono-data text-muted mt-3">/ MIESIĄC · {years} × 12 RAT</div>
+                <div className="mono-data text-muted mt-3">/ MIESIĄC · <SmoothNumber value={years}/> × 12 RAT</div>
               </div>
 
               <p className="mono-data text-muted opacity-70 leading-relaxed" style={{ fontSize: 11 }}>
@@ -93,11 +111,14 @@ function ScheduleCalcSection({ selectedSeg }) {
   );
 }
 
-function CalcField({ label, value, children }) {
+function CalcField({ label, value, hint, children }) {
   return (
     <div>
-      <div className="flex items-baseline justify-between mb-3">
-        <div className="mono-label text-muted">{label}</div>
+      <div className="flex items-baseline justify-between gap-3 mb-3">
+        <div className="mono-label text-muted flex items-center gap-3 flex-wrap">
+          <span>{label}</span>
+          {hint && <span className="mono-label" style={{ fontSize: 10, textTransform: "none", letterSpacing: "0.04em" }}>{hint}</span>}
+        </div>
         <div className="font-display text-xl">{value}</div>
       </div>
       {children}

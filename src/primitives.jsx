@@ -50,6 +50,60 @@ function Counter({ to, duration = 1600, suffix = "", prefix = "" }) {
   return <span ref={ref}>{prefix}{val.toLocaleString("pl-PL")}{suffix}</span>;
 }
 
+// Smoothly tween between successive `value` updates (e.g. calc slider output).
+// Unlike Counter, this one interpolates from the *previous* value to the new one,
+// so dragging a slider produces a fluid change instead of a jumpy re-render.
+// `format` receives the (rounded) numeric value and returns the rendered string.
+function SmoothNumber({ value, duration = 420, format, className = "" }) {
+  const fmt = format || ((v) => v.toLocaleString("pl-PL"));
+  const [display, setDisplay] = useState(value);
+  const fromRef = useRef(value);
+  const rafRef = useRef(null);
+  const pulseRef = useRef(null);
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    cancelAnimationFrame(rafRef.current);
+    const from = fromRef.current;
+    const to = value;
+    if (from === to) { setDisplay(to); return; }
+    const start = performance.now();
+    const tick = (t) => {
+      const p = Math.min(1, (t - start) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const cur = from + (to - from) * eased;
+      setDisplay(cur);
+      if (p < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        fromRef.current = to;
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
+
+    // Brief pulse on change to make the update feel alive.
+    setPulse(true);
+    clearTimeout(pulseRef.current);
+    pulseRef.current = setTimeout(() => setPulse(false), 260);
+
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [value, duration]);
+
+  return (
+    <span
+      className={className}
+      style={{
+        display: "inline-block",
+        fontVariantNumeric: "tabular-nums",
+        transform: pulse ? "translateY(-1px)" : "translateY(0)",
+        transition: "transform 260ms var(--ease, cubic-bezier(0.22,1,0.36,1))",
+      }}
+    >
+      {fmt(Math.round(display))}
+    </span>
+  );
+}
+
 // Minimal icons (Lucide-style hand-drawn)
 const Icon = {
   Pin:   (p) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
@@ -113,4 +167,4 @@ function GhostBtn({ children, href, onClick, className = "", ...rest }) {
   );
 }
 
-Object.assign(window, { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext, useInView, Reveal, Counter, Icon, fmtPLN, fmtM2, STATUS, PrimaryBtn, GhostBtn });
+Object.assign(window, { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext, useInView, Reveal, Counter, SmoothNumber, Icon, fmtPLN, fmtM2, STATUS, PrimaryBtn, GhostBtn });

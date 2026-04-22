@@ -267,10 +267,31 @@ function PlotIsometric({ filter, onSelect, hoverId, setHoverId }) {
               )}
               {/* Front face (main) */}
               <polygon points={`${fl.join(",")} ${fr.join(",")} ${tr.join(",")} ${tl.join(",")}`} fill={meta.color} stroke={isHover ? "#1A1A1A" : "#F5F2ED"} strokeWidth={isHover ? 2 : 1}/>
-              {/* Window strips on front */}
-              <rect x={fl[0] + 10} y={fl[1] - height + 12} width={(fr[0]-fl[0]) - 20} height="3" fill="#F5F2ED" opacity="0.6"/>
-              <rect x={fl[0] + 10} y={fl[1] - height + 40} width={((fr[0]-fl[0]) - 24)/2} height="18" fill="#F5F2ED" opacity="0.3"/>
-              <rect x={fl[0] + 14 + ((fr[0]-fl[0]) - 24)/2} y={fl[1] - height + 40} width={((fr[0]-fl[0]) - 24)/2} height="18" fill="#F5F2ED" opacity="0.3"/>
+              {/* Windows — drawn as polygons matching the slanted iso face so they don't look crooked */}
+              {(() => {
+                const facePt = (t, h) => [
+                  fl[0] + t * (fr[0] - fl[0]),
+                  fl[1] + t * (fr[1] - fl[1]) - h * height,
+                ];
+                const pane = (t0, t1, h0, h1, opacity) => {
+                  const p1 = facePt(t0, h0);
+                  const p2 = facePt(t1, h0);
+                  const p3 = facePt(t1, h1);
+                  const p4 = facePt(t0, h1);
+                  return `${p1.join(",")} ${p2.join(",")} ${p3.join(",")} ${p4.join(",")}`;
+                };
+                return (
+                  <>
+                    {/* Eaves trim strip near the top */}
+                    <polygon points={pane(0.08, 0.92, 0.82, 0.86)} fill="#F5F2ED" opacity="0.55"/>
+                    {/* Upper floor window (wide, single pane) */}
+                    <polygon points={pane(0.14, 0.86, 0.56, 0.74)} fill="#F5F2ED" opacity="0.32"/>
+                    {/* Ground floor: two windows split by a central mullion */}
+                    <polygon points={pane(0.12, 0.46, 0.22, 0.46)} fill="#F5F2ED" opacity="0.32"/>
+                    <polygon points={pane(0.54, 0.88, 0.22, 0.46)} fill="#F5F2ED" opacity="0.32"/>
+                  </>
+                );
+              })()}
 
               {/* Roof front slope */}
               <polygon points={`${tl.join(",")} ${tr.join(",")} ${pfTop.join(",")}`} fill={lighter} stroke="#F5F2ED" strokeWidth="0.8"/>

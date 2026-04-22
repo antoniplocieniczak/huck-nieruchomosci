@@ -2,10 +2,10 @@
 // potem rezerwacje, sprzedane na końcu. Dla izometrycznego planu osiedla
 // pozycje pinezek są stałe geograficznie - tego nie sortujemy, tylko listę/grid.
 const SEGMENT_STATUS_ORDER = { available: 0, reserved: 1, sold: 2 };
-// Ile kart dostępnych domyślnie: na mobile 3 (1 kolumna, 3 rzędy), na desktop 6
-// (3 kolumny × 2 rzędy). Reszta chowa się pod przyciskiem expand.
+// Ile kart dostępnych domyślnie: na mobile i desktop pokazujemy 3 (1 rząd na desktop
+// = 3 kolumny × 1 rząd, 3 rzędy × 1 kolumna na mobile). Reszta chowa się pod przyciskiem expand.
 const MOBILE_CARD_LIMIT = 3;
-const DESKTOP_CARD_LIMIT = 6;
+const DESKTOP_CARD_LIMIT = 3;
 
 function PlotSection({ onSelect }) {
   const [filter, setFilter] = useState("all");
@@ -195,14 +195,19 @@ function SegmentCard({ seg, onClick }) {
 
       <div className="aspect-[5/3] bg-[#EAE3D6] mb-5 relative overflow-hidden">
         <svg viewBox="0 0 100 60" className="w-full h-full">
-          <rect x="10" y="20" width="80" height="25" fill={meta.color} opacity="0.9"/>
-          <path d="M10 20 L50 10 L90 20" fill={meta.color}/>
-          <rect x="14" y="28" width="8" height="10" fill="#F4EFE9" opacity="0.5"/>
-          <rect x="26" y="28" width="8" height="10" fill="#F4EFE9" opacity="0.5"/>
-          <rect x="66" y="28" width="8" height="10" fill="#F4EFE9" opacity="0.5"/>
-          <rect x="78" y="28" width="8" height="10" fill="#F4EFE9" opacity="0.5"/>
-          <rect x="44" y="32" width="12" height="13" fill="#F4EFE9" opacity="0.3"/>
+          {/* Ground */}
           <rect x="0" y="45" width="100" height="15" fill="#B8C5AB"/>
+          {/* Wall */}
+          <rect x="10" y="20" width="80" height="25" fill={meta.color} opacity="0.9"/>
+          {/* Roof */}
+          <path d="M8 20 L50 9 L92 20 Z" fill={meta.color}/>
+          {/* Windows — 4 equal panes, aligned */}
+          <rect x="16" y="27" width="8" height="10" fill="#F4EFE9" opacity="0.55"/>
+          <rect x="28" y="27" width="8" height="10" fill="#F4EFE9" opacity="0.55"/>
+          <rect x="64" y="27" width="8" height="10" fill="#F4EFE9" opacity="0.55"/>
+          <rect x="76" y="27" width="8" height="10" fill="#F4EFE9" opacity="0.55"/>
+          {/* Door (centered, touches ground line) */}
+          <rect x="46" y="30" width="8" height="15" fill="#F4EFE9" opacity="0.35"/>
         </svg>
       </div>
 
