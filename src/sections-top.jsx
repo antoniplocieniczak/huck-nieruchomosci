@@ -11,6 +11,7 @@ function Header({ onSegmentsClick }) {
   const links = [
     { href: "#inwestycja", label: "Inwestycja" },
     { href: "#blizniaki",  label: "Bliźniaki" },
+    { href: "#pod-klucz",  label: "Pod klucz" },
     { href: "#lokalizacja",label: "Lokalizacja" },
     { href: "#galeria",    label: "Galeria" },
     { href: "#kontakt",    label: "Kontakt" },
@@ -20,7 +21,7 @@ function Header({ onSegmentsClick }) {
     <header className={`fixed top-0 inset-x-0 z-30 transition-all duration-500 ${scrolled ? "bg-bg/90 backdrop-blur-md border-b hairline" : "bg-ink/20 backdrop-blur-sm"}`}>
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
         <a href="#top" className={`font-display-bold text-2xl leading-none tracking-tight transition-colors ${scrolled ? "text-ink" : "text-bg"}`}>
-          HUCK<span className={scrolled ? "text-forest" : "accent-sage"}>.</span>
+          Zapolskiej<span className={scrolled ? "text-forest" : "accent-sage"}>.</span>
         </a>
 
         <nav className="hidden lg:flex items-center gap-8">
@@ -57,9 +58,7 @@ function Header({ onSegmentsClick }) {
 }
 
 function Hero() {
-  const videoRef = useRef(null);
   const heroRef = useRef(null);
-  const [customCursor, setCustomCursor] = useState({ x: 0, y: 0, show: false });
 
   // Parallax
   useEffect(() => {
@@ -74,16 +73,9 @@ function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
-
   return (
     <section ref={heroRef} id="top" className="relative overflow-hidden"
-             style={{ height: "min(100vh, 900px)", minHeight: "640px" }}
-             onMouseMove={(e) => {
-               const r = heroRef.current.getBoundingClientRect();
-               setCustomCursor({ x: e.clientX - r.left, y: e.clientY - r.top, show: true });
-             }}
-             onMouseLeave={() => setCustomCursor(c => ({ ...c, show: false }))}>
+             style={{ height: "min(100vh, 900px)", minHeight: "640px" }}>
 
       {/* Hero media */}
       <div className="hero-media absolute inset-0">
@@ -97,15 +89,6 @@ function Hero() {
       {/* Overlays */}
       <div className="absolute inset-0 bg-ink/45"/>
       <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent"/>
-
-      {/* Custom cursor (desktop) */}
-      {isDesktop && customCursor.show && (
-        <div className="absolute pointer-events-none z-10 flex items-center gap-3 transition-opacity"
-             style={{ left: customCursor.x, top: customCursor.y, transform: "translate(-50%, -50%)" }}>
-          <span className="w-2 h-2 rounded-full bg-bg"/>
-          <span className="mono-label text-bg whitespace-nowrap">ZOBACZ WIDEO</span>
-        </div>
-      )}
 
       {/* Content */}
       <div className="relative h-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col justify-end pb-20 md:pb-28">
@@ -142,10 +125,11 @@ function Hero() {
         </Reveal>
       </div>
 
-      {/* Availability counter bottom right */}
-      <div className="absolute bottom-8 right-6 md:right-10 text-bg/80 text-right">
-        <div className="mono-label">DOSTĘPNYCH SEGMENTÓW</div>
-        <div className="font-display text-3xl md:text-4xl leading-none mt-1">
+      {/* Availability counter bottom right. Na mobile niżej (bottom-2) i mniejsza czcionka,
+          żeby nie zachodziła na CTA "Pobierz ofertę PDF". */}
+      <div className="absolute bottom-2 md:bottom-8 right-4 md:right-10 text-bg/80 text-right">
+        <div className="mono-label" style={{ fontSize: 10 }}>DOSTĘPNYCH SEGMENTÓW</div>
+        <div className="font-display text-2xl md:text-4xl leading-none mt-1">
           <Counter to={INVESTMENT.availableUnits}/> <span className="opacity-50">/ {INVESTMENT.totalUnits}</span>
         </div>
       </div>

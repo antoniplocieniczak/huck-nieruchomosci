@@ -15,6 +15,7 @@ function App() {
         <Hero/>
         <PillarsSection/>
         <PlotSection onSelect={setSelectedSeg}/>
+        <TurnkeySection/>
         <LocationSection/>
         <GallerySection onPlayVideo={() => setVideoOpen(true)}/>
         <ScheduleCalcSection selectedSeg={selectedSeg}/>

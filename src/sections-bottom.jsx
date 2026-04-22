@@ -240,15 +240,16 @@ function DeveloperSection() {
           </Reveal>
         </div>
 
-        {/* Partnerzy — prawdziwe loga SVG */}
+        {/* Partnerzy — prawdziwe loga SVG. Na mobile 2 × 3, na desktop 3 × 2 (parzysty układ). */}
         <div className="mt-20">
           <div className="mono-label text-muted text-center mb-10">PARTNERZY I CERTYFIKATY</div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             <PartnerLogo variant="pzfd"/>
             <PartnerLogo variant="pekao"/>
             <PartnerLogo variant="iso"/>
             <PartnerLogo variant="pzitb"/>
             <PartnerLogo variant="pa"/>
+            <PartnerLogo variant="sarp"/>
           </div>
         </div>
       </div>
@@ -302,6 +303,17 @@ function ContactSection() {
   const [form, setForm] = useState({ name: "", phone: "", email: "", segment: "", message: "", rodo: false });
   const [submitted, setSubmitted] = useState(false);
 
+  // Listen for prefill requests dispatched from other sections (e.g. "Pod klucz" CTA).
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.segment) {
+        setForm((f) => ({ ...f, segment: e.detail.segment }));
+      }
+    };
+    window.addEventListener("prefill-contact", handler);
+    return () => window.removeEventListener("prefill-contact", handler);
+  }, []);
+
   const onSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
@@ -347,8 +359,9 @@ function ContactSection() {
                   </div>
                   <input className="field" placeholder="E-mail" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required/>
                   <select className="field" value={form.segment} onChange={e => setForm({...form, segment: e.target.value})} style={{ colorScheme: "dark" }}>
-                    <option value="">Interesuje mnie segment…</option>
-                    <option value="">Nie wiem jeszcze</option>
+                    <option value="">Interesuje mnie…</option>
+                    <option value="Wykończenie pod klucz">Wykończenie pod klucz (pakiet premium)</option>
+                    <option value="Nie wiem jeszcze">Nie wiem jeszcze</option>
                     {SEGMENTS.filter(s => s.status !== "sold").map(s => (
                       <option key={s.id} value={s.id}>Segment {s.id} · {s.area} m² · {fmtPLN(s.price)}</option>
                     ))}
@@ -374,8 +387,8 @@ function ContactSection() {
             <div className="glass-card h-full py-7 px-6 md:py-10 md:px-9">
               <div className="flex items-center gap-5">
                 <div className="w-20 h-20 rounded-full bg-stone/20 overflow-hidden flex-shrink-0">
-                  <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80"
-                       alt="" className="w-full h-full object-cover"/>
+                  <img src="uploads/blazej.png"
+                       alt={INVESTMENT.agentName} className="w-full h-full object-cover"/>
                 </div>
                 <div>
                   <div className="font-display text-2xl">{INVESTMENT.agentName}</div>
@@ -406,10 +419,10 @@ function ContactSection() {
               </div>
 
               <div className="mt-8 flex gap-3">
-                <a href="#" aria-label="Instagram" className="w-10 h-10 border border-stone/40 flex items-center justify-center hover:bg-stone hover:border-stone hover:text-forest transition-colors">
+                <a href="https://www.instagram.com/blazej_huck/" target="_blank" rel="noopener" aria-label="Instagram Błażeja Hucka (otwiera się w nowej karcie)" className="w-10 h-10 border border-stone/40 flex items-center justify-center hover:bg-stone hover:border-stone hover:text-forest transition-colors">
                   <Icon.IG className="w-4 h-4"/>
                 </a>
-                <a href="#" aria-label="Facebook" className="w-10 h-10 border border-stone/40 flex items-center justify-center hover:bg-stone hover:border-stone hover:text-forest transition-colors">
+                <a href="https://www.facebook.com/BlazejHuck" target="_blank" rel="noopener" aria-label="Facebook Błażeja Hucka (otwiera się w nowej karcie)" className="w-10 h-10 border border-stone/40 flex items-center justify-center hover:bg-stone hover:border-stone hover:text-forest transition-colors">
                   <Icon.FB className="w-4 h-4"/>
                 </a>
               </div>
@@ -433,7 +446,7 @@ function Footer() {
           <div>
             <div className="mono-label text-bg/50 mb-5">NAWIGACJA</div>
             <ul className="space-y-3 text-sm">
-              {[["#inwestycja","Inwestycja"],["#blizniaki","Bliźniaki"],["#lokalizacja","Lokalizacja"],["#galeria","Galeria"],["#kontakt","Kontakt"]].map(([h,l]) => (
+              {[["#inwestycja","Inwestycja"],["#blizniaki","Bliźniaki"],["#pod-klucz","Pod klucz"],["#lokalizacja","Lokalizacja"],["#galeria","Galeria"],["#kontakt","Kontakt"]].map(([h,l]) => (
                 <li key={h}><a href={h} className="hover:text-bg transition-colors">{l}</a></li>
               ))}
             </ul>
@@ -552,14 +565,26 @@ function PartnerLogo({ variant }) {
       </div>
     );
   }
-  // pa — Pasywny Budynek
+  if (variant === "pa") {
+    return (
+      <div {...common}>
+        <svg viewBox="0 0 160 40" className="w-full h-full" fill="none">
+          <path d="M6 32 L18 10 L30 32 Z" fill={accentColor}/>
+          <path d="M12 32 L18 20 L24 32 L12 32" fill="white"/>
+          <text x="36" y="20" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill={inkColor}>BUDYNEK</text>
+          <text x="36" y="30" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill={accentColor}>PASYWNY</text>
+        </svg>
+      </div>
+    );
+  }
+  // sarp — Stowarzyszenie Architektów Polskich
   return (
     <div {...common}>
       <svg viewBox="0 0 160 40" className="w-full h-full" fill="none">
-        <path d="M6 32 L18 10 L30 32 Z" fill={accentColor}/>
-        <path d="M12 32 L18 20 L24 32 L12 32" fill="white"/>
-        <text x="36" y="20" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill={inkColor}>BUDYNEK</text>
-        <text x="36" y="30" fontFamily="sans-serif" fontSize="11" fontWeight="700" fill={accentColor}>PASYWNY</text>
+        <rect x="4" y="10" width="24" height="20" fill={inkColor}/>
+        <path d="M10 30 L16 16 L22 30" stroke="white" strokeWidth="1.5" fill="none"/>
+        <text x="34" y="20" fontFamily="serif" fontSize="14" fontWeight="700" fill={inkColor}>SARP</text>
+        <text x="34" y="30" fontFamily="sans-serif" fontSize="6" letterSpacing="0.8" fill={inkColor}>STOW. ARCHITEKTÓW POLSKICH</text>
       </svg>
     </div>
   );

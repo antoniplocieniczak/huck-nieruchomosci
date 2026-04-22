@@ -162,7 +162,10 @@ function PlotTopDown({ filter, onSelect, hoverId, setHoverId }) {
 }
 
 function PlotIsometric({ filter, onSelect, hoverId, setHoverId }) {
-  const W = 1200, H = 760;
+  // ViewBox rozszerzony tak, by 4 budynki w rzędzie + ogrody zmieściły się
+  // bez obcinania z prawej/dolnej strony (iso rzut generuje szeroki, średnio-wysoki
+  // obrys — buildings sięgają ~760 px w poziomie i ~830 px w pionie).
+  const W = 1520, H = 900;
   // Isometric projection: angle 30°
   // For each building at (col, row), convert grid to iso
   // Each grid cell = 180 wide x 180 deep in world
@@ -174,8 +177,8 @@ function PlotIsometric({ filter, onSelect, hoverId, setHoverId }) {
   };
 
   const segMap = Object.fromEntries(SEGMENTS.map(s => [s.id, s]));
-  // Origin offset
-  const ox = W / 2 - 50, oy = 160;
+  // Origin offset — przesuwamy całość trochę w prawo, ale zostawiamy zapas z obu stron
+  const ox = 740, oy = 160;
 
   const drawBuilding = (b) => {
     const segA = segMap[`${b.id}A`];
@@ -267,13 +270,14 @@ function PlotIsometric({ filter, onSelect, hoverId, setHoverId }) {
               )}
               {/* Front face (main) */}
               <polygon points={`${fl.join(",")} ${fr.join(",")} ${tr.join(",")} ${tl.join(",")}`} fill={meta.color} stroke={isHover ? "#1A1A1A" : "#F5F2ED"} strokeWidth={isHover ? 2 : 1}/>
-              {/* Windows — drawn as polygons matching the slanted iso face so they don't look crooked */}
+              {/* Windows — tylko 2 dolne kwadratowe okna, żeby nie zasłaniały etykiety segmentu.
+                  Rysowane polygonami zgodnymi ze slantem fasady w iso. */}
               {(() => {
                 const facePt = (t, h) => [
                   fl[0] + t * (fr[0] - fl[0]),
                   fl[1] + t * (fr[1] - fl[1]) - h * height,
                 ];
-                const pane = (t0, t1, h0, h1, opacity) => {
+                const pane = (t0, t1, h0, h1) => {
                   const p1 = facePt(t0, h0);
                   const p2 = facePt(t1, h0);
                   const p3 = facePt(t1, h1);
@@ -282,13 +286,8 @@ function PlotIsometric({ filter, onSelect, hoverId, setHoverId }) {
                 };
                 return (
                   <>
-                    {/* Eaves trim strip near the top */}
-                    <polygon points={pane(0.08, 0.92, 0.82, 0.86)} fill="#F5F2ED" opacity="0.55"/>
-                    {/* Upper floor window (wide, single pane) */}
-                    <polygon points={pane(0.14, 0.86, 0.56, 0.74)} fill="#F5F2ED" opacity="0.32"/>
-                    {/* Ground floor: two windows split by a central mullion */}
-                    <polygon points={pane(0.12, 0.46, 0.22, 0.46)} fill="#F5F2ED" opacity="0.32"/>
-                    <polygon points={pane(0.54, 0.88, 0.22, 0.46)} fill="#F5F2ED" opacity="0.32"/>
+                    <polygon points={pane(0.14, 0.44, 0.18, 0.46)} fill="#F5F2ED" opacity="0.32"/>
+                    <polygon points={pane(0.56, 0.86, 0.18, 0.46)} fill="#F5F2ED" opacity="0.32"/>
                   </>
                 );
               })()}
